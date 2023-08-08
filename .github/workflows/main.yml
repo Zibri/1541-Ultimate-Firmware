@@ -43,7 +43,7 @@ jobs:
            sed -i "s/985250/985248/g" fpga/io/c2n_playback/vhdl_source/tape_speed_control.vhd
            make u2plus
            export -n LD_LIBRARY_PATH
-           cp target/u2plus/nios/ultimate/result/ultimate.bin.bin .
+           cp target/u2plus/nios/ultimate/result/ultimate.bin .
            cp target/u2plus/nios/recovery/result/recovery.bin .
            ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
            7z a ../u2plus_fw_${ver}.7z ultimate.bin update.u2p recovery.bin
