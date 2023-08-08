@@ -83,7 +83,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.WF }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: r$(date +%s)
           release_name: Firmware version ${{ env.fwv }}
@@ -106,7 +106,7 @@ jobs:
 
       - uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.WF}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             fs=require("fs");
             github.repos.updateRelease(
