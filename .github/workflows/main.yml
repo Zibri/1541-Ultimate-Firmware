@@ -47,7 +47,7 @@ jobs:
            cp target/u2plus/nios/recovery/result/* .
            ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
            7z a ../u2plus_fw_${ver}.7z ultimate.* update.u2p recovery.*
-           echo "zip_path=$(cygpath -w -a ../*.7z)" >> $GITHUB_OUTPUT
+           echo "zip_path=$(realpath ../*.7z)" >> $GITHUB_OUTPUT
            echo "zip_name=$(basename ../*.7z)" >> $GITHUB_OUTPUT
            echo "rev=$ver" >> $GITHUB_OUTPUT
            a="$(git log --pretty="%h - %ar: %s" -10)"
