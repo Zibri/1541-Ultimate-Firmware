@@ -51,6 +51,7 @@ jobs:
            echo "zip_name=$(basename ../*.7z)" >> $GITHUB_OUTPUT
            echo "rev=$ver" >> $GITHUB_OUTPUT
            git log --pretty="%h - %ar: %s" -10 >../revbody.txt
+           echo "zip_log=$(realpath ../revbody.txt)" >> $GITHUB_OUTPUT
 
     - name: Release
       id: upload
@@ -77,6 +78,7 @@ jobs:
         run: |
              a="$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)"
              echo "fwv=$a" >> $GITHUB_ENV
+             echo "ft=r$(date +%s)" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
@@ -84,7 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: r$(date +%s)
+          tag_name: ${{ env.ft }}
           release_name: Firmware version ${{ env.fwv }}
           draft: true
           prerelease: true
@@ -109,7 +111,7 @@ jobs:
               {
                 owner: context.repo.owner, 
                 repo: context.repo.repo,
-                body: fs.readFileSync('revbody.txt', 'utf8').toString(),
+                body: fs.readFileSync( "${{ steps.build.outputs.zip_log }}", 'utf8').toString(),
                 release_id: ${{ needs.create_release.outputs.release_id }},
                 draft: false,
                 prerelease: true,
