@@ -78,7 +78,6 @@ jobs:
         run: |
              a="$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)"
              echo "fwv=$(cygpath -w -a ../*.7z)" >> $GITHUB_ENV
-      - uses: actions/github-script@v3
 
       - name: Create Release
         id: create_release
