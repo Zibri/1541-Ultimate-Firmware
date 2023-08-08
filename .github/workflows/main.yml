@@ -77,15 +77,15 @@ jobs:
         shell: bash
         run: |
              a="$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)"
-             echo "fwv=$(cygpath -w -a ../*.7z)" >> $GITHUB_ENV
+             echo "fwv=$(realpath ../*.7z)" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WF }}
         with:
-          tag_name: v${{ env.fwv }}
+          tag_name: r$(date +%s)
           release_name: Firmware version ${{ env.fwv }}
           draft: true
           prerelease: true
@@ -106,7 +106,7 @@ jobs:
 
       - uses: actions/github-script@v3
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{secrets.WF}}
           script: |
             fs=require("fs");
             github.repos.updateRelease(
