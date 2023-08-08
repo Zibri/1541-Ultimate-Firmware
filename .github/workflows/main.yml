@@ -77,7 +77,7 @@ jobs:
         shell: bash
         run: |
              a="$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)"
-             echo "fwv=$(realpath ../*.7z)" >> $GITHUB_ENV
+             echo "fwv=\"$a\"" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
