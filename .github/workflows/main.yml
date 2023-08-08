@@ -104,10 +104,10 @@ jobs:
           echo "${{steps.build.outputs.glog }}" >>revbody.txt
           echo -e '```' >>revbody.txt
           for a in $(curl -qs https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/main.yml/runs|grep -B 1 "Build And Release"|grep id|tr -d " ,"|cut -d ":" -f 2);do curl -qs -X DELETE -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ secrets.WF }} " "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$a";done
+
       - uses: actions/github-script@v3
-                 
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}} # ${{secrets.WF}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             fs=require("fs");
             github.repos.updateRelease(
