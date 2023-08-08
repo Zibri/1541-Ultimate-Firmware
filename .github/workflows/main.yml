@@ -50,8 +50,6 @@ jobs:
            echo "zip_path=$(realpath ../*.7z)" >> $GITHUB_OUTPUT
            echo "zip_name=$(basename ../*.7z)" >> $GITHUB_OUTPUT
            echo "rev=$ver" >> $GITHUB_OUTPUT
-           git log --pretty="%h - %ar: %s" -10 >../revbody.txt
-           echo "zip_log=$(realpath ../revbody.txt)" >> $GITHUB_OUTPUT
 
     - name: Release
       id: upload
@@ -101,6 +99,7 @@ jobs:
         shell: bash
         run: |
           for a in $(curl -qs https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/main.yml/runs|grep -B 1 "Build And Release"|grep id|tr -d " ,"|cut -d ":" -f 2);do curl -qs -X DELETE -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ secrets.WF }} " "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$a";done
+          curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|grep -B 2 message|grep "message\|date"|cut -d'"' -f4 >revbody.txt
 
       - uses: actions/github-script@v3
         with:
@@ -111,7 +110,7 @@ jobs:
               {
                 owner: context.repo.owner, 
                 repo: context.repo.repo,
-                body: fs.readFileSync( "${{ steps.build.outputs.zip_log }}", 'utf8').toString(),
+                body: fs.readFileSync( "revbody.txt", 'utf8').toString(),
                 release_id: ${{ needs.create_release.outputs.release_id }},
                 draft: false,
                 prerelease: true,
