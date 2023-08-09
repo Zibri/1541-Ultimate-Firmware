@@ -46,7 +46,8 @@ jobs:
            cp target/u2plus/nios/ultimate/result/ultimate.bin .
            cp target/u2plus/nios/recovery/result/recovery.bin .
            ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
-           7z a ../u2plus_fw_${ver}.7z ultimate.bin update.u2p recovery.bin
+           shv=$(curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits"|grep 2>/dev/null sha|head -1|cut -d'"' -f4|cut -c 1-7)
+           7z a ../u2plus_fw_${ver}_${shv}.7z ultimate.bin update.u2p recovery.bin
            echo "zip_path=$(realpath ../*.7z)" >> $GITHUB_OUTPUT
            echo "zip_name=$(basename ../*.7z)" >> $GITHUB_OUTPUT
            echo "rev=$ver" >> $GITHUB_OUTPUT
