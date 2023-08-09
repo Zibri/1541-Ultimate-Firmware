@@ -76,8 +76,9 @@ jobs:
         run: |
              a="$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)"
              echo "fwv=$a" >> $GITHUB_ENV
-             a="$(curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|grep sha|head -1|cut -d'"' -f 4)"
-             echo "ft=${a::7}" >> $GITHUB_ENV
+             b="$(curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|grep sha|head -1|cut -d'"' -f 4)"
+             b="${b::7}"
+             echo "ft=$b" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
