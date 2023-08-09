@@ -1,0 +1,125 @@
+name: Build And Release (Zibri)
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'Revision'
+        required: false
+        default: ''
+        
+  repository_dispatch:
+    inputs:
+      revision:
+        description: 'Revision'
+        required: false
+        default: ''
+
+
+jobs:
+
+  build:
+  
+    name: Build
+    needs: create_release
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build
+      id: build
+      shell: bash
+      run: |
+           sudo apt install libfl-dev libfl2
+           sudo rm -rf /opt/hostedtoolcache
+           wget -q https://downloads.intel.com/akdlm/software/acdsinst/18.1std/625/ib_tar/Quartus-lite-18.1.0.625-linux.tar -O - | tar -xvf -
+           ./setup.sh --mode unattended --unattendedmodeui none --accept_eula 1 --installdir /opt/fpga
+           rm -rf setup.sh components
+           export LD_LIBRARY_PATH="/opt/fpga/quartus/linux64"
+           export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin:/opt/fpga/quartus/linux64:$PATH
+           export QUARTUS_ROOTDIR="/opt/fpga/quartus"
+           git clone --recurse-submodules -j8 https://github.com/Zibri/1541ultimate
+           cd 1541ultimate
+           make u2plus
+           export -n LD_LIBRARY_PATH
+           cp target/u2plus/nios/ultimate/result/ultimate.bin .
+           cp target/u2plus/nios/recovery/result/recovery.bin .
+           ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
+           curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" >shv || true 
+           shv=$(cat shv|grep 2>/dev/null sha|head -1|cut -d'"' -f4|cut -c 1-7)
+           7z a ../u2plus_fw_${ver}_${shv}.7z ultimate.bin update.u2p recovery.bin
+           echo "zip_path=$(realpath ../*.7z)" >> $GITHUB_OUTPUT
+           echo "zip_name=$(basename ../*.7z)" >> $GITHUB_OUTPUT
+           echo "rev=$ver" >> $GITHUB_OUTPUT
+
+    - name: Release
+      id: upload
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build.outputs.zip_path }}
+          asset_name: ${{ steps.build.outputs.zip_name }}
+          asset_content_type: application/x-7z-compressed
+
+  create_release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+
+      - name: Get Version
+        shell: bash
+        run: |
+             a=$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)
+             echo "fwv=$a" >> $GITHUB_ENV
+             #b=$(curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" | grep sha | head -1|cut -d'"' -f4)
+             #b="${b::7}"
+             curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" | grep 2>/dev/null sha | head -1|cut -d'"' -f4 >sha.txt || true
+             a=$(cat sha.txt)
+             a="${a:0:7}"
+             echo "ft=$a" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: z${{ env.ft }}
+          release_name: Firmware version ${{ env.fwv }} (${{ env.ft }}) by Zibri
+          draft: true
+          prerelease: false
+
+  publish_release:
+    name: Publish Release
+    needs: [create_release, build]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Get revision
+        shell: bash
+        run: |
+          for a in $(curl -qs https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/zibri.yml/runs|grep -B 1 "Build And Release"|grep id|tr -d " ,"|cut -d ":" -f 2);do curl -qs -X DELETE -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ secrets.WF }} " "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$a";done
+          curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|jq '.[] | .commit.author.date + ": " + .commit.message' >revbody.txt
+
+      - uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            fs=require("fs");
+            github.repos.updateRelease(
+              {
+                owner: context.repo.owner, 
+                repo: context.repo.repo,
+                body: fs.readFileSync( "revbody.txt", 'utf8').toString(),
+                release_id: ${{ needs.create_release.outputs.release_id }},
+                draft: false,
+                prerelease: false,
+                release: true
+              });
+              
