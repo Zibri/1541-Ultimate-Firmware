@@ -92,7 +92,7 @@ jobs:
           tag_name: ${{ env.ft }}
           release_name: Firmware version ${{ env.fwv }} (${{ env.ft }})
           draft: true
-          prerelease: true
+          prerelease: false
 
   publish_release:
     name: Publish Release
@@ -118,7 +118,7 @@ jobs:
                 body: fs.readFileSync( "revbody.txt", 'utf8').toString(),
                 release_id: ${{ needs.create_release.outputs.release_id }},
                 draft: false,
-                prerelease: true,
-                release: false
+                prerelease: false,
+                release: true
               });
               
