@@ -75,14 +75,13 @@ jobs:
         shell: bash
         run: |
              a=$(curl -s "https://raw.githubusercontent.com/GideonZ/1541ultimate/master/software/application/versions.h"|grep APPL_VERSION|cut -d'"' -f2)
-             echo "fwv=$a" # >> $GITHUB_ENV
+             echo "fwv=$a" >> $GITHUB_ENV
              #b=$(curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" | grep sha | head -1|cut -d'"' -f4)
              #b="${b::7}"
-             curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" | grep sha | head -1|cut -d'"' -f4 >sha.txt || true
+             curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" | grep 2>/dev/null sha | head -1|cut -d'"' -f4 >sha.txt || true
              a=$(cat sha.txt)
              a="${a:0:7}"
-             echo "ft=$a" # >> $GITHUB_ENV
-             exit 127
+             echo "ft=$a" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
