@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-sudo apt install libfl-dev libfl2
+#sudo apt install libfl-dev libfl2
 sudo rm -rf /opt/hostedtoolcache
 wget -q https://downloads.intel.com/akdlm/software/acdsinst/18.1std/625/ib_tar/Quartus-lite-18.1.0.625-linux.tar -O - | tar -xvf -
 ./setup.sh --mode unattended --unattendedmodeui none --accept_eula 1 --installdir /opt/fpga
