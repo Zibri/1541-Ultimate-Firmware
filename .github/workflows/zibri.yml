@@ -31,9 +31,7 @@ jobs:
       id: build
       shell: bash
       run: |
-           ls -alR
-           echo workspace
-           ls -alR $GITHUB_WORKSPACE
+           chmod a+x buildz.sh
            ./buildz.sh
     
     - name: Release
