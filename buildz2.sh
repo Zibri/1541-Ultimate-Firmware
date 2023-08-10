@@ -1,8 +1,10 @@
 #!/bin/bash
 #
 #sudo apt install libfl-dev libfl2
-sudo rm -rf /opt/hostedtoolcache
-wget -q https://downloads.intel.com/akdlm/software/acdsinst/18.1std/625/ib_tar/Quartus-lite-18.1.0.625-linux.tar -O - | tar -xvf -
+sudo rm -rf /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/share/miniconda /usr/local/lib/android
+sudo aria2c -x8 -j8 -s8 https://downloads.intel.com/akdlm/software/acdsinst/18.1std/625/ib_tar/Quartus-lite-18.1.0.625-linux.tar --dir /mnt
+tar -xvf /mnt/Quartus-lite-18.1.0.625-linux.tar
+sudo rm /mnt/Quartus-lite-18.1.0.625-linux.tar
 ./setup.sh --mode unattended --unattendedmodeui none --accept_eula 1 --installdir /opt/fpga
 rm -rf setup.sh components
 export LD_LIBRARY_PATH="/opt/fpga/quartus/linux64"
