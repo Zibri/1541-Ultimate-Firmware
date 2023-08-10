@@ -18,7 +18,7 @@ jobs:
           ( curl -qs https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/main.yml/runs|grep conclusion|grep -q null ) && exit 0 || (
           for a in $(curl -qs https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/check.yml/runs|grep -B 1 "Check For Updates"|grep id|tr -d " ,"|cut -d ":" -f 2);do curl -qs -X DELETE -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${{ secrets.WF }} " "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$a";done
           curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits"|grep 2>/dev/null sha|head -1|cut -d'"' -f4|cut -c 1-7 >grev.txt || true
-          curl -s "https://api.github.com/repos/Zibri/1541-Ultimate-Firmware/releases"|grep 2>/dev/null tag_name|head -1|cut -d'"' -f4 >zrev.txt || true)
+          curl -s "https://api.github.com/repos/Zibri/1541-Ultimate-Firmware/releases"|grep 2>/dev/null tag_name|head -1|cut -d'"' -f4 | tr -d "z" >zrev.txt || true)
           cmp -s grev.txt zrev.txt && exit 0 || (
           ( curl -v -X POST -d '{"ref":"main"}' -H "Accept: application/vnd.github.v3+json" \
           -H "Authorization: token ${{ secrets.WF }} " \
