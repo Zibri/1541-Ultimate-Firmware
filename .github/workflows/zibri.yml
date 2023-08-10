@@ -26,10 +26,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
     - name: Build
       id: build
       shell: bash
       run: buildz.sh
+    
     - name: Release
       id: upload
       uses: actions/upload-release-asset@v1
