@@ -1,0 +1,37 @@
+name: Build And Release (Allin1)
+
+on:
+
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'Revision'
+        required: false
+        default: ''
+        
+  repository_dispatch:
+    inputs:
+      revision:
+        description: 'Revision'
+        required: false
+        default: ''
+
+
+jobs:
+
+  build:
+  
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      id: build
+      shell: bash
+      run: |
+           chmod a+x buildz2.sh
+           ./buildz2.sh
+    
+
+            
