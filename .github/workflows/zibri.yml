@@ -30,7 +30,11 @@ jobs:
     - name: Build
       id: build
       shell: bash
-      run: buildz.sh
+      run: |
+           ls -alR
+           echo workspace
+           ls -alR $GITHUB_WORKSPACE
+           ./buildz.sh
     
     - name: Release
       id: upload
