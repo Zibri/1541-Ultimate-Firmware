@@ -10,9 +10,9 @@ export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-
 export QUARTUS_ROOTDIR="/opt/fpga/quartus"
 git clone --recurse-submodules -j8 https://github.com/Zibri/1541ultimate
 cd 1541ultimate
-sed --debug -i "s/0x1E00/0x1E0C/g" software/drive/disk_image.h
-sed --debug -i "s/0x1E00, 0x1BE0, 0x1A00, 0x1860, 0x1E00, 0x1BE0, 0x1A00, 0x1860/0X1E0C, 0x1BE6, 0x1A0A, 0x186A, 0X1E0C, 0x1BE6, 0x1A0A, 0x186A/g" software/drive/disk_image.cc
-sed --debug -i "s/0x1E00/0x1E0C/g" software/drive/disk_image.cc
+sed -i "s/0x1E00/0x1E0C/g" software/drive/disk_image.h
+sed -i "s/0x1E00, 0x1BE0, 0x1A00, 0x1860, 0x1E00, 0x1BE0, 0x1A00, 0x1860/0X1E0C, 0x1BE6, 0x1A0A, 0x186A, 0X1E0C, 0x1BE6, 0x1A0A, 0x186A/g" software/drive/disk_image.cc
+sed -i "s/0x1E00/0x1E0C/g" software/drive/disk_image.cc
 make u2plus
 export -n LD_LIBRARY_PATH
 cp target/u2plus/nios/ultimate/result/ultimate.bin .
