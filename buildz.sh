@@ -19,6 +19,7 @@ git &>/dev/null clone --recurse-submodules -j8 https://github.com/Zibri/1541ulti
 cd 1541ultimate
 git merge origin/Zibri-fixes
 git merge origin/Zibri-fixes-2
+sed -i 's/Ultimate-II Plus %s (1%b)/Ultimate-II Plus %s-Z (1%b)/' software/application/ultimate/ultimate.cc
 make u2plus
 export -n LD_LIBRARY_PATH
 cp target/u2plus/nios/ultimate/result/ultimate.bin .
