@@ -15,8 +15,9 @@ export LD_LIBRARY_PATH="/opt/fpga/quartus/linux64"
 export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin:/opt/fpga/quartus/linux64:$PATH
 export QUARTUS_ROOTDIR="/opt/fpga/quartus"
 echo Cloning...
-git &>/dev/null clone --branch "$1" --recurse-submodules -j8 https://github.com/GideonZ/1541ultimate
+git &>/dev/null clone --recurse-submodules -j8 https://github.com/GideonZ/1541ultimate
 cd 1541ultimate
+git reset --hard $1
 make u2plus
 export -n LD_LIBRARY_PATH
 cp target/u2plus/nios/ultimate/result/ultimate.bin .
