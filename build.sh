@@ -30,7 +30,7 @@ ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
 curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" >shv || true 
 shv=$(git rev-parse HEAD|cut -c1-7)
 7z a ../u2plus_fw_${ver}_${shv}.7z ultimate.bin update.u2p recovery.bin
-echo "```" >revbody.txt
-curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|jq '.[] | .commit.author.date + ": " + .commit.message' | tr -d '"'>>revbody.txt
-echo "```" >>revbody.txt
+echo '```' >revbody.txt
+git log -n 20 --pretty=format:'%ci  %s' >>revbody.txt
+echo -e '\n```' >>revbody.txt
 gh release create -R "Zibri/1541-Ultimate-Firmware" -t "Firmware version ${ver} (${shv})" -F revbody.txt ${shv} $(realpath ../*.7z)
