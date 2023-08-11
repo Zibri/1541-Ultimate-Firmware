@@ -1,4 +1,4 @@
-name: Build And Release (Allin1)
+name: Build And Release (Zibri)
 
 on:
 
@@ -33,7 +33,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
            chmod a+x buildz2.sh
-           ./buildz2.sh
+           ./buildz2.sh ${{ github.event.inputs.revision }}
     
 
             
