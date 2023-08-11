@@ -15,8 +15,9 @@ export LD_LIBRARY_PATH="/opt/fpga/quartus/linux64"
 export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin:/opt/fpga/quartus/linux64:$PATH
 export QUARTUS_ROOTDIR="/opt/fpga/quartus"
 echo Cloning...
-git &>/dev/null clone --branch "$1" --recurse-submodules -j8 https://github.com/GideonZ/1541ultimate
+git &>/dev/null clone --recurse-submodules -j8 https://github.com/GideonZ/1541ultimate
 cd 1541ultimate
+git reset --hard $1
 sed -i "s/985250/985248/g" fpga/io/c2n_playback/vhdl_source/tape_speed_control.vhd
 sed -i "s/0x1E00/0x1E0C/g" software/drive/disk_image.h
 sed -i "s/0x1E00, 0x1BE0, 0x1A00, 0x1860, 0x1E00, 0x1BE0, 0x1A00, 0x1860/0X1E0C, 0x1BE6, 0x1A0A, 0x186A, 0X1E0C, 0x1BE6, 0x1A0A, 0x186A/g" software/drive/disk_image.cc
