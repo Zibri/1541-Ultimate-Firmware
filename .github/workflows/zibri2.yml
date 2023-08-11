@@ -7,14 +7,14 @@ on:
       revision:
         description: 'Revision'
         required: false
-        default: ''
+        default: 'master'
         
   repository_dispatch:
     inputs:
       revision:
         description: 'Revision'
         required: false
-        default: ''
+        default: 'master'
 
 
 jobs:
