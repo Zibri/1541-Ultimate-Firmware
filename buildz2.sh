@@ -29,4 +29,4 @@ curl -s "https://api.github.com/repos/GideonZ/1541ultimate/commits" >shv || true
 shv=$(cat shv|grep 2>/dev/null sha|head -1|cut -d'"' -f4|cut -c 1-7)
 7z a ../u2plus_fw_${ver}_${shv}.7z ultimate.bin update.u2p recovery.bin
 curl -s https://api.github.com/repos/GideonZ/1541ultimate/commits|jq '.[] | .commit.author.date + ": " + .commit.message' | tr -d '"'>revbody.txt
-gh release create -R "Zibri/1541-Ultimate-Firmware" -t "Firmware version ${ver} (${shv}) by Zibri" -F revbody.txt zz${shv} $(realpath ../*.7z)
+gh release create -R "Zibri/1541-Ultimate-Firmware" -t "Firmware version ${ver} (${shv}) by Zibri" -F revbody.txt ${shv} $(realpath ../*.7z)
