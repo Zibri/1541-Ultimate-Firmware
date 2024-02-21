@@ -12,9 +12,8 @@ echo Installing...
 ./setup.sh --mode unattended --unattendedmodeui none --accept_eula 1 --installdir /opt/fpga
 rm -rf setup.sh components
 export LD_LIBRARY_PATH="/opt/fpga/quartus/linux64"
-export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin:/opt/fpga/quartus/linux64:/opt/fpga/quartus/bin:$PATH
+export PATH=/opt/fpga/nios2eds/bin:/opt/fpga/nios2eds/bin/gnu/H-x86_64-pc-linux-gnu/bin:/opt/fpga/quartus/linux64:$PATH
 export QUARTUS_ROOTDIR="/opt/fpga/quartus"
-rm /opt/fpga/quartus/linux64/quartus_sh
 echo Cloning...
 git &>/dev/null clone --recurse-submodules -j8 https://github.com/Zibri/1541ultimate
 cd 1541ultimate
