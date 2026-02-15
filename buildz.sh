@@ -23,9 +23,10 @@ git merge origin/Zibri-tests || true
 sed -i 's/Ultimate-II Plus %s (1%b)/Ultimate-II Plus %s-Z (1%b)/' software/application/ultimate/ultimate.cc
 make u2plus
 export -n LD_LIBRARY_PATH
+rm -rf /opt/fpga/quartus
 cp target/u2plus/nios/ultimate/result/ultimate.bin .
 cp target/u2plus/nios/recovery/result/recovery.bin .
-ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2)
+ver=$(grep APPL ./software/application/versions.h|cut -d'"' -f2|head -1)
 curl -s "https://api.github.com/repos/Zibri/1541ultimate/commits" >shv || true 
 shv=$(git rev-parse HEAD|cut -c1-7)
 7z a ../u2plus_fw_${ver}_${shv}Z.7z ultimate.bin update.u2p recovery.bin
